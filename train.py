@@ -93,7 +93,7 @@ def run_epoch(data, model, criterion, optimizer, device, is_train=True):
 # 解析命令行參數
 parser = argparse.ArgumentParser(description='Train a CNN for spell recognition')
 parser.add_argument('--train_path', type=str, required=True, help='Path to the training files')
-parser.add_argument('--model_path', type=str, required=True, help='Path to save the trained models')
+parser.add_argument('--model_path', type=str, default='.', help='Path to save the trained models')
 args = parser.parse_args()
 
 # 設定設備
@@ -142,6 +142,7 @@ for epoch in range(epochs):
 
     # 定期保存模型
     if epoch % 100 == 0:
+        
         torch.save(model, f'{args.model_path}/model_epoch_{epoch}.pt')
         print(f"Model saved at epoch {epoch}")
 
