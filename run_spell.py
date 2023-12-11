@@ -6,9 +6,28 @@ from collections import deque, Counter
 import serial
 import time
 import serial.tools.list_ports
-
+import argparse
+parser = argparse.ArgumentParser(description='spell recognition')
+parser.add_argument('--arduino', action='store_true', help='Activate Arduino')
+parser.add_argument('--path', type=str, help='Model Path')
+args = parser.parse_args()
 
 time.sleep(2)
+
+
+def find_available_cameras(max_tests=10):
+    available_cameras = []
+    for i in range(max_tests):
+        cap = cv2.VideoCapture(i, cv2.CAP_DSHOW)
+        if cap.isOpened():
+            available_cameras.append(i)
+            cap.release()
+    return available_cameras
+
+# Test the first 10 indices.
+available_cameras = find_available_cameras(10)
+print("Available Cameras:", available_cameras)
+
 
 
 def detect_arduino_port():
@@ -21,20 +40,28 @@ def detect_arduino_port():
 
     return arduino_ports
 
-arduino_ports = detect_arduino_port()
 
-if arduino_ports:
-    print("找到以下Arduino的COM端口：")
-    for port in arduino_ports:
-        print(port)
+
+if args.arduino:
+    arduino_ports = detect_arduino_port()
+    if arduino_ports:
+        print("找到以下Arduino的COM端口：")
+        for port in arduino_ports:
+            print(port)
+        port = arduino_ports[0]  # 使用第一個找到的端口
+        baud_rate = 9600
+        ser = serial.Serial(port, baud_rate, timeout=1)
+    else:
+        print("找不到任何Arduino的COM端口。")
 else:
-    print("找不到任何Arduino的COM端口。")
+    print("Arduino連接未啟用。")
+#port  = 'COM1'
+#port = port  # 埠號（Windows作業系統通常為COMX，X為埠號；Linux作業系統通常為/dev/ttyUSBX，X為埠號）
 
-port = port  # 埠號（Windows作業系統通常為COMX，X為埠號；Linux作業系統通常為/dev/ttyUSBX，X為埠號）
-baud_rate = 9600  # 波特率（Arduino程式中的Serial.begin的數值）
+#baud_rate = 9600  # 波特率（Arduino程式中的Serial.begin的數值）
 
 # 建立串列連接
-ser = serial.Serial(port, baud_rate, timeout=1)
+#ser = serial.Serial(port, baud_rate, timeout=1)
 
 class CNN(nn.Module):
     def __init__(self):
@@ -113,7 +140,7 @@ def get_predict(black_img):
     return prediction, prob
 
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(available_cameras[0])
 fps = 30
 
 desired_width = 640
@@ -154,7 +181,7 @@ check_counter = 0
 cord_to_remove = []
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = torch.load("spell_ai6.pt", map_location=device)
+model = torch.load(args.path, map_location=device)
 model.eval()
 
 ff = 0
@@ -185,9 +212,10 @@ while(cap.isOpened()):
 
     concatenated_image = np.hstack((frame, black_img))
     cv2.imshow('Frame', concatenated_image)
-    ff += 1
+    
     #cv2.imwrite(
     #    f'C:\\Users\\tyhua\\Desktop\\openai\\jpg\\saved_gogo_{ff}.jpg', concatenated_image)
+    
     
     check_counter += 1
     if check_counter > 10: #重設過後等待10次才再檢查，以免圖形一直被消除掉
@@ -195,29 +223,48 @@ while(cap.isOpened()):
         if move < 10 or no_cord >8:
             #print(move, no_cord)
             if len(list(coordinates)) >= 15:
+                ff += 1
+                #cv2.imwrite(f'C:\\Gdrive_tudo\\code\\project\\moretraining\morev5_{ff:05d}.png', black_img)  
+                #print(ff)
                 prediction, prob = get_predict(black_img)
                 if prob > 0.99:
                     print('Prediction:', prediction, prob)
                     if prediction == 1:
                         spell = 'Incedio🔥'
                         command = f"incendio"
+                        #ser.write(command.encode())
+                        #print("incendio")
                     elif prediction == 2:
                         spell = 'aqua🌊'
                         command = f"aqua"
+                        #ser.write(command.encode())
+                        #print("aqua")
                     elif prediction == 3:
                         spell = 'leviosa🪶'
                         command = f'arresto'
+                        #ser.write(command.encode())
+                        #print("arresto")
                     elif prediction == 4:
                         spell = 'arresto🖐️'
                         command=f"arresto"
+                        #ser.write(command.encode())
+                        #print("arresto")
                     elif prediction == 5:
                         spell = 'alohomora🔓'
                         command = f"alohomora"
+                        #ser.write(command.encode())
+                        #print("alohomora")
                     elif prediction == 6:
                         spell = 'lumos💡' 
                         command = f"lumos"
-                    ser.write(command.encode())
-                    print(command)
+                        #ser.write(command.encode())
+                        #print("lumos")
+                    #ser.write(command.encode())
+ 
+                    if args.arduino:
+                        ser.write(command.encode())
+                    print(spell)
+                        #print(command)
                 else:
                     print("NULL")
             coordinates = deque(maxlen=50)
