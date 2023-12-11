@@ -139,8 +139,8 @@ def get_predict(black_img):
 
     return prediction, prob
 
-
-cap = cv2.VideoCapture(available_cameras[0])
+chose = int(input("which index?"))
+cap = cv2.VideoCapture(available_cameras[chose])
 fps = 30
 
 desired_width = 640
@@ -227,10 +227,11 @@ while(cap.isOpened()):
                 #cv2.imwrite(f'C:\\Gdrive_tudo\\code\\project\\moretraining\morev5_{ff:05d}.png', black_img)  
                 #print(ff)
                 prediction, prob = get_predict(black_img)
+                spell = "null"
                 if prob > 0.99:
                     print('Prediction:', prediction, prob)
                     if prediction == 1:
-                        spell = 'Incedio🔥'
+                        spell = 'Incendio🔥'
                         command = f"incendio"
                         #ser.write(command.encode())
                         #print("incendio")
