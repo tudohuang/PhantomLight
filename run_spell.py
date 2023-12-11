@@ -58,7 +58,7 @@ else:
 #port  = 'COM1'
 #port = port  # 埠號（Windows作業系統通常為COMX，X為埠號；Linux作業系統通常為/dev/ttyUSBX，X為埠號）
 
-#baud_rate = 9600  # 波特率（Arduino程式中的Serial.begin的數值）
+#baud_rate = 9600  # （Arduino程式中的Serial.begin的數值）
 
 # 建立串列連接
 #ser = serial.Serial(port, baud_rate, timeout=1)
