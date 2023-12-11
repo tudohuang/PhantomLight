@@ -46,7 +46,7 @@ class App(tk.Tk):
         im = ImageGrab.grab(rect1)
 
         current_spell = self.spell_var.get()
-        image_path = f"test_data/{current_spell}{self.count:03d}.png"
+        image_path = f"data/{current_spell}{self.count:03d}.png"
         im.save(image_path)
         print(image_path)
 
