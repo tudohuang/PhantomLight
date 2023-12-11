@@ -9,7 +9,7 @@ import serial.tools.list_ports
 import argparse
 parser = argparse.ArgumentParser(description='spell recognition')
 parser.add_argument('--arduino', action='store_true', help='Activate Arduino')
-parser.add_argument('--path', type=str, help='Model Path')
+parser.add_argument('--model_path', type=str, help='Model Path')
 args = parser.parse_args()
 
 time.sleep(2)
