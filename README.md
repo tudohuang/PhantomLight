@@ -36,7 +36,7 @@ python train.py --train_path your_path --model_path model_save_path
 # Acknowledgement
 本項目的成功歸功於多人的支持和幫助，
 - 首先，我感謝日本環球影城，因為他們的原始魔杖軌跡辨識系統啟發了本研究的開始。
-- 接著我感謝NTUST的Tengyi Huang教授以及 CGSH的Dlinda老師在這段時間的支持與教導，
+- 接著我感謝NTUST的Tengyi Huang [@htylab](https://github.com/htylab) 教授以及 CGSH的Dlinda老師在這段時間的支持與教導，
 - 最後，我感謝Meta公司的Pytorch，使得專案成形;Openai公司的ChatGPT，在Debug的時候幫了許多忙。
 
 # Citation
